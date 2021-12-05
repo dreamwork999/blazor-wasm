@@ -1,0 +1,102 @@
+@page "/bookings-crud"
+@attribute [Authorize()]
+@inherits AuthComponentBase
+
+<h1 class="fs-2">Bookings CRUD</h1>
+
+@if (showCreate)
+{
+    <Create close=@(() => showCreate = false) done="onDone" />
+}
+else if (updateId != null)
+{
+    <Update Id="updateId" close=@(() => updateId = null) done="onDone" />
+}
+else
+{
+    <button class="btn btn-outline-primary" @onclick=@(_ => showCreate = true)>
+        <span class="oi oi-plus" aria-hidden="true"></span>
+        Create Booking
+    </button>
+}
+
+@if (apiResult.IsSuccess && apiResult.Response!.Results?.Count > 0)
+{
+    <div class="shadow-sm p1 mt-4">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th class="d-none d-sm-table-cell">Name</th>
+                <th>RoomType</th>
+                <th>Room No</th>
+                <th>Cost</th>
+                <th class="d-none d-sm-table-cell">Start Date</th>
+                <th class="d-none d-sm-table-cell">Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in apiResult.Response.Results)
+            {
+                <tr @key=@booking.Id>
+                    <td>@booking.Id</td>
+                    <td class="d-none d-sm-table-cell">@booking.Name</td>
+                    <td>@booking.RoomType</td>
+                    <td>@booking.RoomNumber</td>
+                    <td>@($"{booking.Cost:C}")</td>
+                    <td class="d-none d-sm-table-cell">@booking.BookingStartDate.ToShortDateString()</td>
+                    <td class="d-none d-sm-table-cell">@booking.CreatedBy</td>
+                    <td>
+                        <button class="btn btn-outline-success" @onclick=@(() => updateId = booking.Id)>Edit</button>
+                        <button class="btn btn-danger" @onclick="@(() => delete(booking.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+
+    <ErrorSummary Status=@deleteApiResult.ErrorStatus />
+
+}
+else if (!apiResult.Completed)
+{
+    <p class="mt-5 fs-3 text-muted">Retrieving Bookings ...</p>
+}
+
+<div class="mt-5 text-gray-400 flex justify-center">
+    <a href="https://github.com/ServiceStackApps/blazor-wasm-servicestack/blob/master/MyApp.ServiceModel/Bookings.cs" class="mx-2">
+        <span class="oi oi-code w-5 h-5 inline-flex text-red-800 align-text-top me-1"></span>Bookings.cs</a>
+    <a href="https://github.com/ServiceStackApps/blazor-wasm-servicestack/blob/master/MyApp.Client/Pages/BookingsCrud/Index.razor" class="mx-2">
+        <img src="/img/blazor.svg" class="w-5 h-5 inline-flex text-purple-800 me-1">Index.razor</a>
+</div>
+
+
+@code {
+    bool showCreate { get; set; }
+
+    int? updateId { get; set; }
+
+    ApiResult<QueryResponse<Bookings>> apiResult = new();
+
+    async Task refresh() => apiResult = await ApiAsync(new QueryBookings());
+
+    protected override async Task OnInitializedAsync() => await refresh();
+
+    async Task onDone(IdResponse result)
+    {
+        deleteApiResult.Reset();
+        showCreate = false;
+        updateId = null;
+        await refresh();
+    }
+
+    ApiResult<EmptyResponse> deleteApiResult = new();
+
+    async Task delete(int id)
+    {
+        deleteApiResult = await ApiAsync(new DeleteBooking { Id = id });
+        if (deleteApiResult.IsSuccess)
+            await refresh();
+    }
+}

@@ -1,0 +1,34 @@
+@page "/hello-secure"
+@attribute [Authorize()]
+@inherits AuthComponentBase
+
+<h1 class="fs-2">Call HelloSecure</h1>
+
+<form @onsubmit="_ => OnSubmit()" class="max-w-xl row g-3">
+    <div class="col col-10">
+        <input type="text" placeholder="What's your name?" @bind-value="request.Name" spellcheck="false"
+               class=@ClassNames("form-control", apiResult.InvalidClass(nameof(request.Name)))>
+        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(request.Name)></ErrorField>
+    </div>
+    <div class="col col-2">
+        <button class="btn btn-primary" @onclick="OnSubmit">Go</button>
+    </div>
+</form>
+
+
+@if (apiResult.IsSuccess) {
+    <h3 class="text-success mt-4">@apiResult.Response!.Result</h3>
+}
+
+@code {
+    HelloSecure request = new()
+    {
+        Name = "Blazor WASM"
+    };
+
+    ApiResult<HelloResponse> apiResult = new();
+
+    protected override async Task OnInitializedAsync() => await OnSubmit();
+
+    async Task OnSubmit() => apiResult = await ApiAsync(request);
+}
