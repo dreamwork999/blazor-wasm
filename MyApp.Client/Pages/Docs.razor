@@ -59,7 +59,7 @@ else if (Doc.ErrorStatus == null)
                 .Descendants<Markdig.Extensions.Yaml.YamlFrontMatterBlock>()
                 .FirstOrDefault();
 
-            var metaObj = block
+            var metaObj = block?
                 .Lines // StringLineGroup[]
                 .Lines // StringLine[]
                 .Select(x => $"{x}\n")
@@ -68,7 +68,7 @@ else if (Doc.ErrorStatus == null)
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => KeyValuePairs.Create(x.LeftPart(':').Trim(), x.RightPart(':').Trim()))
                 .ToObjectDictionary();
-            metaObj.PopulateInstance(doc);
+            metaObj?.PopulateInstance(doc);
 
             await writer.FlushAsync();
             doc.Preview = writer.ToString();

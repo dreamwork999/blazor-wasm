@@ -22,6 +22,29 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+
+<script>
+/* ShellCommand */
+window.copy = function(target) {
+    let $el = document.createElement("input")
+    let $lbl = target.parentElement.querySelector('label')
+
+    $el.setAttribute("value", $lbl.innerText)
+    document.body.appendChild($el)
+    $el.select()
+    document.execCommand("copy")
+    document.body.removeChild($el);
+
+    if (typeof window.getSelection == "function") {
+        const range = document.createRange()
+        range.selectNodeContents($lbl)
+        window.getSelection()?.removeAllRanges()
+        window.getSelection()?.addRange(range)
+    }
+
+    setTimeout(function () { successText.value = '' }, 3000)
+}
+</script>
 </body>
 
 </html>
