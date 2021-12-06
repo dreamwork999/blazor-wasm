@@ -89,9 +89,10 @@ public class ServiceStackStateProvider : AuthenticationStateProvider
 
     public async Task<ApiResult<AuthenticateResponse>> Logout()
     {
-        authResult = await client.ApiAsync(new Authenticate { provider = "logout" });
+        var logoutResult = await client.ApiAsync(new Authenticate { provider = "logout" });
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-        return authResult;
+        authResult.Reset();
+        return logoutResult;
     }
 
     public async Task<ApiResult<AuthenticateResponse>> SignInAsync(ApiResult<AuthenticateResponse> apiResult)

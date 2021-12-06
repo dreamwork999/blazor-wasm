@@ -9,7 +9,7 @@
     return;
 }
 
-<h1 class="fs-2 mb-3">Sign Up</h1>
+<h1 class="fs-2 mb-3">Sign In</h1>
 
 <form @onsubmit="_ => OnSubmit()" class=@ClassNames("max-w-xl", apiResult.IsError ? " was-validated" : "")>
     <ErrorSummary Status=@apiResult.ErrorStatus 
@@ -35,10 +35,14 @@
 
 <div class="mt-5 flex">
     <span class="me-2">Quick Links:</span>
-    <button class="btn btn-outline-secondary" @onclick='_ => SetUser("admin@email.com", "p@55wOrd")'>admin@email.com</button>
-    <button class="btn btn-outline-secondary" @onclick='_ => SetUser("manager@email.com", "p@55wOrd")'>manager@email.com</button>
-    <button class="btn btn-outline-secondary" @onclick='_ => SetUser("employee@email.com", "p@55wOrd")'>employee@email.com</button>
-    <button class="btn btn-outline-secondary" @onclick='_ => SetUser("new@user.com", "p@55wOrd")'>new@user.com</button>
+    <button class="btn btn-outline-secondary mb-1" @onclick='_ => SetUser("admin@email.com", "p@55wOrd")'>admin@email.com</button>
+    <button class="btn btn-outline-secondary mb-1" @onclick='_ => SetUser("manager@email.com", "p@55wOrd")'>manager@email.com</button>
+    <button class="btn btn-outline-secondary mb-1" @onclick='_ => SetUser("employee@email.com", "p@55wOrd")'>employee@email.com</button>
+    <button class="btn btn-outline-secondary mb-1" @onclick='_ => SetUser("new@user.com", "p@55wOrd")'>new@user.com</button>
+</div>
+
+<div class="mt-4">
+    <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/SignIn.razor" IconSrc="/img/blazor.svg" />
 </div>
 
 @code {

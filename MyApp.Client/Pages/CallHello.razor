@@ -14,10 +14,13 @@
     </div>
 </form>
 
-
 @if (apiResult.IsSuccess) {
     <h3 class="text-success mt-4">@apiResult.Response!.Result</h3>
 }
+
+<div class="mt-4">
+    <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/CallHello.razor" IconSrc="/img/blazor.svg" />
+</div>
 
 @code {
     Hello request = new()

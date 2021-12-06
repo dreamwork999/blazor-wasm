@@ -69,8 +69,8 @@
     <div class="d-flex justify-content-between">
         <button type="button" class="btn btn-outline-primary" @onclick=@(async () => { await close.InvokeAsync(); })>Close</button>
 
-        <a href="https://github.com/NetCoreTemplates/blazor-wasm//blob/master/MyApp.Client/Pages/BookingsCrud/Create.razor" class="mt-2">
-            <img src="/img/blazor.svg" class="w-5 h-5 inline-flex text-purple-800 me-1">Create.razor</a>
+        <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/BookingsCrud/Create.razor" 
+                 IconSrc="/img/blazor.svg" class="mt-2" />
 
         <button type="submit" class="btn btn-primary">Create Booking</button>
     </div>

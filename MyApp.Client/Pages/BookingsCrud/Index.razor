@@ -28,8 +28,8 @@ else
             <tr>
                 <th>Id</th>
                 <th class="d-none d-sm-table-cell">Name</th>
-                <th>RoomType</th>
-                <th>Room No</th>
+                <th><span class="d-none d-sm-inline">Room </span>Type</th>
+                <th><span class="d-none d-sm-inline">Room </span>No</th>
                 <th>Cost</th>
                 <th class="d-none d-sm-table-cell">Start Date</th>
                 <th class="d-none d-sm-table-cell">Created By</th>
@@ -47,8 +47,8 @@ else
                     <td class="d-none d-sm-table-cell">@booking.BookingStartDate.ToShortDateString()</td>
                     <td class="d-none d-sm-table-cell">@booking.CreatedBy</td>
                     <td>
-                        <button class="btn btn-outline-success" @onclick=@(() => updateId = booking.Id)>Edit</button>
-                        <button class="btn btn-danger" @onclick="@(() => delete(booking.Id))">Delete</button>
+                        <button class="btn mb-1 btn-outline-success" @onclick=@(() => updateId = booking.Id)>Edit</button>
+                        <button class="btn mb-1 btn-danger" @onclick="@(() => delete(booking.Id))">Delete</button>
                     </td>
                 </tr>
             }
@@ -64,11 +64,9 @@ else if (!apiResult.Completed)
     <p class="mt-5 fs-3 text-muted">Retrieving Bookings ...</p>
 }
 
-<div class="mt-5 text-gray-400 flex justify-center">
-    <a href="https://github.com/NetCoreTemplates/blazor-wasm//blob/master/MyApp.ServiceModel/Bookings.cs" class="mx-2">
-        <span class="oi oi-code w-5 h-5 inline-flex text-red-800 align-text-top me-1"></span>Bookings.cs</a>
-    <a href="https://github.com/NetCoreTemplates/blazor-wasm//blob/master/MyApp.Client/Pages/BookingsCrud/Index.razor" class="mx-2">
-        <img src="/img/blazor.svg" class="w-5 h-5 inline-flex text-purple-800 me-1">Index.razor</a>
+<div class="mt-5 flex justify-center">
+    <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.ServiceModel/Bookings.cs" IconClass="oi oi-code" />
+    <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/BookingsCrud/Index.razor" IconSrc="/img/blazor.svg" />
 </div>
 
 
