@@ -134,6 +134,8 @@ jobs:
           APP_NAME: ${{ github.event.repository.name }}
           HOST_DOMAIN: ${{ env.domain }}
           LETSENCRYPT_EMAIL: ${{ env.letsencrypt_email }}
+          DEPLOY_API: ${{ secrets.DEPLOY_API }}
+          DEPLOY_CDN: ${{ secrets.DEPLOY_CDN }}
         with:
           input: .deploy/docker-compose-template.yml
           output: .deploy/${{ github.event.repository.name }}-docker-compose.yml
