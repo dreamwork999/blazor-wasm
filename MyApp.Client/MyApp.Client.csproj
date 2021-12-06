@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Markdig" Version="0.26.0" />
         <PackageReference Include="ServiceStack.Blazor" Version="5.*" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.1.5" />
         <PackageReference Include="Blazor.Extensions.Logging" Version="2.0.4" />
@@ -16,4 +17,9 @@
     <ItemGroup>
       <ProjectReference Include="..\MyApp.ServiceModel\MyApp.ServiceModel.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="wwwroot\content\" />
+    </ItemGroup>
 </Project>
+
+

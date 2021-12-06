@@ -95,14 +95,14 @@ public class ServiceStackStateProvider : AuthenticationStateProvider
         return logoutResult;
     }
 
-    public async Task<ApiResult<AuthenticateResponse>> SignInAsync(ApiResult<AuthenticateResponse> apiResult)
+    public Task<ApiResult<AuthenticateResponse>> SignInAsync(ApiResult<AuthenticateResponse> apiResult)
     {
         authResult = apiResult;
         if (authResult.IsSuccess)
         {
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
-        return authResult;
+        return Task.FromResult(authResult);
     }
 
     public Task<ApiResult<AuthenticateResponse>> SignInAsync(AuthenticateResponse authResponse) =>
