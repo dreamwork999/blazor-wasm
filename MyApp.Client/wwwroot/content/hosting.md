@@ -28,7 +28,7 @@ a copy of its static UI generated assets and hosted on:
 
 ### GitHub Pages CDN
 
-### [blazor-wasm-gh.web-templates.io](https://blazor-wasm-gh.web-templates.io)
+### [blazor-wasm.jamstacks.net](https://blazor-wasm.jamstacks.net)
 
 This is an optional deployment step which publishes a copy of your .NET App's `/wwwroot` folder to this templates 
 [gh-pages](https://github.com/NetCoreTemplates/blazor-wasm/tree/gh-pages) branch where it's automatically served from 
@@ -49,7 +49,7 @@ directly from its deployed ASP.NET Core server at:
 
 ### [blazor-wasm.web-templates.io](https://blazor-wasm.web-templates.io)
 
-But when accessed from the CDN [blazor-wasm-gh.web-templates.io](https://blazor-wasm-gh.web-templates.io) that contains a 
+But when accessed from the CDN [blazor-wasm.jamstacks.net](https://blazor-wasm.jamstacks.net) that contains a 
 copy of its static `/wwwroot` UI assets, only its back-end JSON APIs are used to power its dynamic features.
 
 ## Total Cost
