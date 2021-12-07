@@ -15,4 +15,4 @@ $ x new blazor-wasm ProjectName
 
 ## Getting Started
 
-[Visual Studio 2022](https://visualstudio.microsoft.com/launch/) Recommended for Blazor WAM Apps.
+[Visual Studio 2022](https://visualstudio.microsoft.com/launch/) is recommended for developing Blazor WASM Apps.
