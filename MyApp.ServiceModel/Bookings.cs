@@ -7,7 +7,7 @@ using ServiceStack.DataAnnotations;
 
 namespace MyApp.ServiceModel;
 
-public class Bookings : AuditBase
+public class Booking : AuditBase
 {
     [AutoIncrement]
     public int Id { get; set; }
@@ -31,7 +31,7 @@ public enum RoomType
 }
 
 [AutoApply(Behavior.AuditQuery)]
-public class QueryBookings : QueryDb<Bookings> 
+public class QueryBookings : QueryDb<Booking> 
 {
     public int? Id { get; set; }
 }
@@ -43,7 +43,7 @@ public class QueryBookings : QueryDb<Bookings>
 
 [ValidateHasRole("Employee")]
 [AutoApply(Behavior.AuditCreate)]
-public class CreateBooking : ICreateDb<Bookings>, IReturn<IdResponse>
+public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
 {
     public string Name { get; set; }
     [ApiAllowableValues(typeof(RoomType))]
@@ -59,7 +59,7 @@ public class CreateBooking : ICreateDb<Bookings>, IReturn<IdResponse>
 
 [ValidateHasRole("Employee")]
 [AutoApply(Behavior.AuditModify)]
-public class UpdateBooking : IPatchDb<Bookings>, IReturn<IdResponse>
+public class UpdateBooking : IPatchDb<Booking>, IReturn<IdResponse>
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -77,7 +77,7 @@ public class UpdateBooking : IPatchDb<Bookings>, IReturn<IdResponse>
 
 [ValidateHasRole("Manager")]
 [AutoApply(Behavior.AuditSoftDelete)]
-public class DeleteBooking : IDeleteDb<Bookings>, IReturnVoid
+public class DeleteBooking : IDeleteDb<Booking>, IReturnVoid
 {
     public int Id { get; set; }
 }

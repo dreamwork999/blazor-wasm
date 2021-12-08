@@ -75,7 +75,7 @@ else if (!apiResult.Completed)
 
     int? updateId { get; set; }
 
-    ApiResult<QueryResponse<Bookings>> apiResult = new();
+    ApiResult<QueryResponse<Booking>> apiResult = new();
 
     async Task refresh() => apiResult = await ApiAsync(new QueryBookings());
 
