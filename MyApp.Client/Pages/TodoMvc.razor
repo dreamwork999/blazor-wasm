@@ -107,7 +107,7 @@
 
     protected override async Task OnInitializedAsync() => await refreshTodos();
 
-    // For best UX: initially changes applied locally, before revalidated with real server state
+    // For best UX: apply changes locally then revalidate with real server state
     async Task refreshTodos()
     {
         var apiResult = await ApiAsync(new QueryTodos());
