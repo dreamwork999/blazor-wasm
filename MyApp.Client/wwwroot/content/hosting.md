@@ -47,7 +47,7 @@ directly from its deployed ASP.NET Core server at:
 
 ### Digital Ocean
 
-### [blazor-wasm.web-templates.io](https://blazor-wasm.web-templates.io)
+### [blazor-wasm-api.jamstacks.net](https://blazor-wasm-api.jamstacks.net)
 
 But when accessed from the CDN [blazor-wasm.jamstacks.net](https://blazor-wasm.jamstacks.net) that contains a 
 copy of its static `/wwwroot` UI assets, only its back-end JSON APIs are used to power its dynamic features.

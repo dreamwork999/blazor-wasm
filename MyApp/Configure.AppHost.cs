@@ -13,8 +13,6 @@ public class AppHost : AppHostBase, IHostingStartup
     public override void Configure(Container container)
     {
         SetConfig(new HostConfig {
-            // Allow CORS Cookies from DEPLOY_CDN
-            UseSameSiteCookies = false,
         });
 
         Plugins.Add(new CorsFeature(allowedHeaders: "Content-Type,Authorization",
