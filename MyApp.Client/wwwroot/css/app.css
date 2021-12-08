@@ -99,3 +99,14 @@ a, .btn-link {
         line-height: 1.8;
     }
 }
+
+.youtube {
+    width: 896px; 
+    height:525px;
+}
+@media (max-width: 896px) {
+    .youtube {
+        width: 100%;
+        height: auto;
+    }
+}
