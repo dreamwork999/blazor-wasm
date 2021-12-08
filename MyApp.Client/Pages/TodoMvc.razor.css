@@ -4,7 +4,7 @@
     font-size: 20px;
 }
 
-/* tailwind styles used in https://vue-ssg-gh.web-templates.io/todos */
+/* tailwind styles used in https://vue-ssg.jamstacks.net/todos */
 [type='text']
 {-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#fff;border-color:#6b7280;border-width:1px;border-radius:0;padding:0.5rem 0.75rem;font-size:1rem;line-height:1.5rem}
 [type='text']:focus{
