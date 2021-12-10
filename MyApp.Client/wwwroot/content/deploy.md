@@ -109,9 +109,6 @@ client routing:
 
     <!-- Define custom domain name that CDN should use -->
     <Exec Condition="$(DEPLOY_CDN) != ''" Command="echo $(DEPLOY_CDN) &gt; $(MSBuildProjectDirectory)/../MyApp.Client/wwwroot/CNAME" />
-
-    <!-- Allow CORS from DEPLOY_CDN -->
-    <WriteLinesToFile File="$(MSBuildProjectDirectory)/Configure.AppHost.cs" Lines="$([System.IO.File]::ReadAllText($(MSBuildProjectDirectory)/Configure.AppHost.cs).Replace('{DEPLOY_CDN}',$(DEPLOY_CDN)))" Overwrite="true" Encoding="UTF-8" />
 </Target>
 ```
 
