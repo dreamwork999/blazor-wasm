@@ -1,11 +1,23 @@
-﻿using System.Security.Claims;
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using ServiceStack;
 
 namespace MyApp.Client;
 
-public abstract class AuthComponentBase : StackComponentBase
+/// <summary>
+/// For Pages and Components that make use of ServiceStack functionality, e.g. Client
+/// </summary>
+public abstract class AppComponentBase : ServiceStack.Blazor.BlazorComponentBase, IHasJsonApiClient
+{
+}
+
+/// <summary>
+/// For Pages and Components requiring Authentication
+/// </summary>
+public abstract class AppAuthComponentBase : AppComponentBase
 {
     [CascadingParameter]
     protected Task<AuthenticationState>? AuthenticationStateTask { get; set; }

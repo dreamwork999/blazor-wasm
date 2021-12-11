@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase
-@inject ServiceStackStateProvider AuthStateProvider;
+@inject ServiceStackStateProvider AuthState;
 
 <div class="page">
     <div class="sidebar">
@@ -10,21 +10,21 @@
         <div class="top-row px-4">
             <a href="/docs/hosting" class="btn btn-outline-success m-3">$0.40 /mo</a>
 
-            @if (AuthState.IsAuthenticated())
+        @if (AuthState.IsAuthenticated)
+        {
+            var authUser = AuthState.AuthUser!;
+
+            <span class="me-3">@authUser.DisplayName</span>
+
+            var roles = authUser.Roles;
+            @if (roles.Count > 0)
             {
-                var authUser = AuthState.AuthenticatedUser()!;
-
-                <span class="me-3">@authUser.GetDisplayName()</span>
-
-                var roles = authUser.GetRoles();
-                @if (roles.Length > 0)
+                @foreach (var role in roles)
                 {
-                    @foreach (var role in roles)
-                    {
-                        <small title="Admin" class="px-2 py-sm-1 me-1 bg-success bg-gradient text-white rounded">@role</small>
-                    }
+                    <small title="Admin" class="px-2 py-sm-1 me-1 bg-success bg-gradient text-white rounded">@role</small>
                 }
             }
+        }
             <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
         </div>
         <div class="content px-4">
@@ -35,10 +35,4 @@
 
 
 @code {
-    [CascadingParameter]
-    Task<AuthenticationState>? AuthStateTask { get; set; }
-
-    AuthenticationState? AuthState { get; set; }
-
-    protected override async Task OnParametersSetAsync() => AuthState = await AuthStateTask!;
 } 

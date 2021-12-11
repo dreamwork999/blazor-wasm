@@ -1,20 +1,20 @@
 @page "/hello-secure"
 @attribute [Authorize()]
-@inherits AuthComponentBase
+@inherits AppAuthComponentBase
 
 <h1 class="fs-2">
     Call HelloSecure 
 </h1>
 
-<form @onsubmit="_ => OnSubmit()" class="max-w-xl row g-3">
+<form @onsubmit="submit" class="max-w-xl row g-3">
+<CascadingValue Value=@apiResult.ErrorStatus>
     <div class="col col-10">
-        <input type="text" placeholder="What's your name?" @bind-value="request.Name" spellcheck="false"
-               class=@ClassNames("form-control", apiResult.InvalidClass(nameof(request.Name)))>
-        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(request.Name)></ErrorField>
+        <TextInput placeholder="What's your name?" @bind-Value="request.Name" spellcheck="false" />
     </div>
     <div class="col col-2">
-        <button class="btn btn-primary" @onclick="OnSubmit">Go</button>
+        <button class="btn btn-primary" @onclick="submit">Go</button>
     </div>
+</CascadingValue>
 </form>
 
 @if (apiResult.IsSuccess) {
@@ -34,7 +34,7 @@
 
     ApiResult<HelloResponse> apiResult = new();
 
-    protected override async Task OnInitializedAsync() => await OnSubmit();
+    protected override async Task OnInitializedAsync() => await submit();
 
-    async Task OnSubmit() => apiResult = await ApiAsync(request);
+    async Task submit() => apiResult = await ApiAsync(request);
 }

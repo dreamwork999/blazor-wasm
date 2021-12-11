@@ -26,7 +26,7 @@ builder.Services.AddBlazoredLocalStorage(config =>
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<ServiceStackStateProvider>());
 
-BlazorConfig.Theme = Theme.Bootstrap5; // ServiceStack.Blazor Components Theme to use
+//BlazorConfig.Theme = BlazorTheme.Bootstrap5; // ServiceStack.Blazor Components Theme to use
 builder.Services.AddBlazorApiClient(builder.Configuration["ApiBaseUrl"] ?? builder.HostEnvironment.BaseAddress);
 
 builder.Services.AddScoped<ServiceStackStateProvider>();

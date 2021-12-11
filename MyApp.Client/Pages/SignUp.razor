@@ -1,5 +1,5 @@
 @page "/signup"
-@inherits AuthComponentBase
+@inherits AppAuthComponentBase
 @inject ServiceStackStateProvider authProvider
 @inject NavigationManager NavigationManager
 
@@ -11,36 +11,25 @@
 
 <h1 class="fs-2 mb-3">Sign Up</h1>
 
-<form @onsubmit="_ => OnSubmit()" class=@ClassNames("max-w-xl", apiResult.IsError ? " was-validated" : "")>
-    <ErrorSummary Status=@apiResult.ErrorStatus VisibleFields=@(new[]{ 
-        nameof(Register.DisplayName), nameof(Register.Email), nameof(Register.Password), nameof(Register.ConfirmPassword) }) />
+<form @onsubmit="submit" class=@ClassNames("max-w-xl")>
+<CascadingValue Value=@apiResult.ErrorStatus>
+    <ErrorSummary VisibleFields=@(new[]{ 
+        nameof(request.DisplayName), nameof(request.Email), nameof(request.Password), nameof(request.ConfirmPassword) }) />
 
     <div class="mb-3 form-floating">
-        <input type="text" id="displayName" placeholder="Display Name" @bind-value="request.DisplayName" required
-                class=@ClassNames("form-control", apiResult.InvalidClass(nameof(Register.DisplayName)))>
-        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(Register.DisplayName)></ErrorField>
-        <label for="displayName">Your first and last name</label>
+        <TextInput @bind-Value="request.DisplayName" spellcheck="false" Help="Your first and last name" required />
     </div>
 
     <div class="mb-3 form-floating">
-        <input type="email" id="email" placeholder="Enter email" @bind-value="request.Email" required
-                class=@ClassNames("form-control", apiResult.InvalidClass(nameof(Register.Email)))>
-        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(Register.Email)></ErrorField>
-        <label for="email">Email</label>
+        <TextInput type="email" @bind-Value="request.Email" spellcheck="false" required />
     </div>
 
     <div class="mb-3 form-floating">
-        <input type="password" id="password" placeholder="Password" @bind-value="request.Password" required
-                class=@ClassNames("form-control", apiResult.InvalidClass(nameof(Register.Password)))>
-        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(Register.Password)></ErrorField>
-        <label for="password">Password, 6 characters or more</label>
+        <TextInput type="password" @bind-Value="request.Password" Help="Password, 6 characters or more" required />
     </div>
 
     <div class="mb-3 form-floating">
-        <input type="password" id="confirmPassword" placeholder="Confirm Password" @bind-value="request.ConfirmPassword" required
-                class=@ClassNames("form-control", apiResult.InvalidClass(nameof(Register.ConfirmPassword)))>
-        <ErrorField Status=@apiResult.ErrorStatus Name=@nameof(Register.ConfirmPassword)></ErrorField>
-        <label for="confirmPassword">Confirm Password</label>
+        <TextInput type="password" @bind-Value="request.ConfirmPassword" />
     </div>
 
     <div class="form-check mb-4">
@@ -53,6 +42,7 @@
     <div class="mb-3">
         <button type="submit" class="btn btn-primary">Sign Up</button>
     </div>
+</CascadingValue>
 </form>
 
 <div class="mt-5 flex">
@@ -77,7 +67,7 @@
         request.AutoLogin = true;
     }
 
-    async Task OnSubmit()
+    async Task submit()
     {
         apiResult.Reset();
 

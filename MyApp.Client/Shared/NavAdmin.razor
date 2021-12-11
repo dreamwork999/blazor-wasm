@@ -1,0 +1,48 @@
+@inherits AppAuthComponentBase
+@inject NavigationManager NavigationManager;
+
+<nav class="admin-navbar navbar navbar-expand-lg navbar-light bg-light border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand ms-2" href="/admin">Admin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/admin/users">
+                Users
+            </NavLink>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style type="text/css">
+/**/
+.main > div.content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.admin-page {
+    padding: 1.5rem 0;
+}
+
+@@media (min-width: 640px) {
+    .admin-page {
+        padding: 1.5rem;
+    }
+}
+</style>
+
+@if (!HasInit)
+{
+    <Loading class="admin-page" />
+}
+
+<link href="/css/admin.css" rel="stylesheet" />
+
+@code {
+}

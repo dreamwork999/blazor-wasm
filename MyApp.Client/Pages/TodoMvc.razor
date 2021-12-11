@@ -1,46 +1,45 @@
 @page "/todomvc"
-@inherits StackComponentBase
+@inherits AppComponentBase
 
-<form @onsubmit="_ => addTodo()" class="max-w-xl">
+<form @onsubmit="addTodo" class="max-w-xl">
+<CascadingValue Value=@errorStatus>
 
     <div class="flex my-8 justify-center">
         <span class="ml-1 sm:ml-4 text-xl sm:text-3xl text-gray-700">Todos Application</span>
     </div>
 
-    <ErrorSummary Status=@errorStatus VisibleFields=@(new[] { nameof(CreateTodo.Text) })></ErrorSummary>
+    <ErrorSummary VisibleFields=@(new[] { nameof(CreateTodo.Text) }) />
 
-    <input type="text" @bind-value="request.Text" placeholder="What needs to be done?"
-           class=@ClassNames("w-full shadow-sm form-control", errorStatus.InvalidClass(nameof(CreateTodo.Text)))>
-    <ErrorField class="m-2" Status=@errorStatus Name=@nameof(CreateTodo.Text)></ErrorField>
+    <TextInput placeholder="What needs to be done?" @bind-Value="request.Text" />
 
     <div class="mt-4 bg-white shadow-sm overflow-hidden rounded-md">
         <ul role="list" class="divide-y divide-gray-200">
-            @foreach (var todo in filteredTodos())
-            {
-                <li @key="todo.Id" class="px-6 py-4">
-                    <div class="relative flex items-start" @onclick="_ => toggleTodo(todo.Id)">
-                        <div class="flex items-center h-6">
-                            @if (todo.IsFinished)
-                            {
-                                <span class="material-icons text-green-600 h-5 w-5">check_circle</span>
-                            }
-                            else
-                            {
-                                <span class="material-icons h-5 w-5">radio_button_unchecked</span>
-                            }
-                        </div>
-                        <div class="ml-3 flex-grow">
-                            <label class=@(todo.IsFinished ? "line-through" : "")>@todo.Text</label>
-                        </div>
-                        <div>
-                            @if (todo.IsFinished)
-                            {
-                                <span class="material-icons h-5 w-5" @onclick="_ => removeTodo(todo.Id)">delete_outline</span>
-                            }
-                        </div>
+        @foreach (var todo in filteredTodos())
+        {
+            <li @key="todo.Id" class="px-6 py-4">
+                <div class="relative flex items-start" @onclick="_ => toggleTodo(todo.Id)">
+                    <div class="flex items-center h-6">
+                        @if (todo.IsFinished)
+                        {
+                            <span class="material-icons text-green-600 h-5 w-5">check_circle</span>
+                        }
+                        else
+                        {
+                            <span class="material-icons h-5 w-5">radio_button_unchecked</span>
+                        }
                     </div>
-                </li>
-            }
+                    <div class="ml-3 flex-grow">
+                        <label class=@(todo.IsFinished ? "line-through" : "")>@todo.Text</label>
+                    </div>
+                    <div>
+                        @if (todo.IsFinished)
+                        {
+                            <span class="material-icons h-5 w-5" @onclick="_ => removeTodo(todo.Id)">delete_outline</span>
+                        }
+                    </div>
+                </div>
+            </li>
+        }
         </ul>
     </div>
 
@@ -74,6 +73,7 @@
         <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/TodoMvc.razor" IconSrc="/img/blazor.svg" />
     </div>
 
+</CascadingValue>
 </form>
 
 

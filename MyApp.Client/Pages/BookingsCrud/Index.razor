@@ -1,22 +1,22 @@
 @page "/bookings-crud"
 @attribute [Authorize()]
-@inherits AuthComponentBase
+@inherits AppAuthComponentBase
 
 <h1 class="fs-2">Bookings CRUD</h1>
 
-@if (showCreate)
+@if (newBooking)
 {
-    <Create close=@(() => showCreate = false) done="onDone" />
+    <Create done="onDone" class="max-w-screen-sm" />
 }
-else if (updateId != null)
+else if (editBookingId != null)
 {
-    <Update Id="updateId" close=@(() => updateId = null) done="onDone" />
+    <Edit Id="editBookingId" done="onDone" class="max-w-screen-sm" />
 }
 else
 {
-    <button class="btn btn-outline-primary" @onclick=@(_ => showCreate = true)>
+    <button class="btn btn-outline-primary" @onclick=@(_ => reset(newBooking:true))>
         <span class="oi oi-plus" aria-hidden="true"></span>
-        Create Booking
+        New Booking
     </button>
 }
 
@@ -24,8 +24,11 @@ else
 {
     <div class="shadow-sm p1 mt-4">
     <table class="table table-striped align-middle">
-        <thead>
-            <tr>
+            <thead>
+            <tr class="noselect">
+                <th>
+                    <span class="oi oi-plus cursor-pointer" aria-hidden="true" title="New Booking" @onclick="_ => reset(newBooking:true)"></span>
+                </th>
                 <th>Id</th>
                 <th class="d-none d-sm-table-cell">Name</th>
                 <th><span class="d-none d-sm-inline">Room </span>Type</th>
@@ -36,28 +39,24 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var booking in apiResult.Response.Results)
-            {
-                <tr @key=@booking.Id>
-                    <td>@booking.Id</td>
-                    <td class="d-none d-sm-table-cell">@booking.Name</td>
-                    <td>@booking.RoomType</td>
-                    <td>@booking.RoomNumber</td>
-                    <td>@($"{booking.Cost:C}")</td>
-                    <td class="d-none d-sm-table-cell">@booking.BookingStartDate.ToShortDateString()</td>
-                    <td class="d-none d-sm-table-cell">@booking.CreatedBy</td>
-                    <td>
-                        <button class="btn mb-1 btn-outline-success" @onclick=@(() => updateId = booking.Id)>Edit</button>
-                        <button class="btn mb-1 btn-danger" @onclick="@(() => delete(booking.Id))">Delete</button>
-                    </td>
-                </tr>
-            }
+        @foreach (var booking in apiResult.Response.Results)
+        {
+            <tr @key=@booking.Id>
+                <td>
+                    <span class="oi oi-pencil cursor-pointer" aria-hidden="true" title="Edit Booking" @onclick="_ => reset(editBookingId:booking.Id)"></span>
+                </td>
+                <td>@booking.Id</td>
+                <td class="d-none d-sm-table-cell">@booking.Name</td>
+                <td>@booking.RoomType</td>
+                <td>@booking.RoomNumber</td>
+                <td>@($"{booking.Cost:C}")</td>
+                <td class="d-none d-sm-table-cell">@booking.BookingStartDate.ToShortDateString()</td>
+                <td class="d-none d-sm-table-cell">@booking.CreatedBy</td>
+            </tr>
+        }
         </tbody>
     </table>
     </div>
-
-    <ErrorSummary Status=@deleteApiResult.ErrorStatus />
-
 }
 else if (!apiResult.Completed)
 {
@@ -84,8 +83,8 @@ else if (!apiResult.Completed)
             which enables rapid development of typed CRUD Services using only declarative POCO DTOs, allowing for
             developing entire 
             <a href="https://docs.servicestack.net/autoquery-crud#advanced-crud-example">audited</a>
-            and <a href="https://docs.servicestack.net/autoquery-audit-log">event logged</a>
-            data-driven systems in a fraction of the time that it would take to implement manually
+            and <a href="https://docs.servicestack.net/autoquery-audit-log">verifiably logged</a>
+            data-driven systems in a fraction of time
             <a href="https://docs.servicestack.net/autoquery-crud-bookings">more...</a>
         </blockquote>
 
@@ -95,9 +94,9 @@ else if (!apiResult.Completed)
 
 
 @code {
-    bool showCreate { get; set; }
+    bool newBooking { get; set; }
 
-    int? updateId { get; set; }
+    int? editBookingId { get; set; }
 
     bool expandAbout { get; set; }
 
@@ -107,20 +106,15 @@ else if (!apiResult.Completed)
 
     protected override async Task OnInitializedAsync() => await refresh();
 
-    async Task onDone(IdResponse result)
+    void reset(bool newBooking = false, int? editBookingId = null)
     {
-        deleteApiResult.Reset();
-        showCreate = false;
-        updateId = null;
-        await refresh();
+        this.newBooking = newBooking;
+        this.editBookingId = editBookingId;
     }
 
-    ApiResult<EmptyResponse> deleteApiResult = new();
-
-    async Task delete(int id)
+    async Task onDone(IdResponse result)
     {
-        deleteApiResult = await ApiAsync(new DeleteBooking { Id = id });
-        if (deleteApiResult.IsSuccess)
-            await refresh();
+        reset();
+        await refresh();
     }
 }

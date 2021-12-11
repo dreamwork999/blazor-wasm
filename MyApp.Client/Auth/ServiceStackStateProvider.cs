@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using ServiceStack;
-using ServiceStack.Blazor;
 
 namespace MyApp.Client;
 
@@ -31,6 +29,11 @@ public static class ClaimUtils
         .Select(x => x.Value).ToArray();
     public static string[] GetPermissions(this ClaimsPrincipal principal) => principal.Claims.Where(x => x.Type == PermissionType)
         .Select(x => x.Value).ToArray();
+
+    public static bool HasRole(this ClaimsPrincipal? principal, string roleName) => principal?.GetRoles()
+        .Contains(roleName) == true;
+    public static bool HasAllRoles(this ClaimsPrincipal? principal, params string[] roleNames) => principal?.GetRoles()
+        .All(roleNames.Contains) == true;
 }
 
 public class ServiceStackStateProvider : AuthenticationStateProvider
@@ -46,9 +49,11 @@ public class ServiceStackStateProvider : AuthenticationStateProvider
         this.Log = log;
     }
 
+    public AuthenticateResponse? AuthUser => authResult.Response;
+    public bool IsAuthenticated => authResult.Response != null;
+
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-
         try
         {
             var authResponse = authResult.Response;
@@ -87,7 +92,7 @@ public class ServiceStackStateProvider : AuthenticationStateProvider
         }
     }
 
-    public async Task<ApiResult<AuthenticateResponse>> Logout()
+    public async Task<ApiResult<AuthenticateResponse>> LogoutAsync()
     {
         var logoutResult = await client.ApiAsync(new Authenticate { provider = "logout" });
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

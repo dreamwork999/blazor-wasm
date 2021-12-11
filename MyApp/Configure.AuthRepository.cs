@@ -3,6 +3,7 @@ using ServiceStack.Web;
 using ServiceStack.Data;
 using ServiceStack.Auth;
 using ServiceStack.Configuration;
+using MyApp.Client;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureAuthRepository))]
 
@@ -44,11 +45,21 @@ public class ConfigureAuthRepository : IHostingStartup
             var authRepo = appHost.Resolve<IAuthRepository>();
             authRepo.InitSchema();
             CreateUser(authRepo, "admin@email.com", "Admin User", "p@55wOrd", roles: new[] { RoleNames.Admin });
-            CreateUser(authRepo, "manager@email.com", "The Manager", "p@55wOrd", roles: new[] { "Employee", "Manager" });
-            CreateUser(authRepo, "employee@email.com", "A Employee", "p@55wOrd", roles: new[] { "Employee" });
+            CreateUser(authRepo, "manager@email.com", "The Manager", "p@55wOrd", roles: new[] { AppRoles.Employee, AppRoles.Manager });
+            CreateUser(authRepo, "employee@email.com", "A Employee", "p@55wOrd", roles: new[] { AppRoles.Employee });
 
-            // Uncomment to enable Admin Users UI in Studio: https://docs.servicestack.net/studio-users
-            // appHost.Plugins.Add(new ServiceStack.Admin.AdminUsersFeature());
+            //Populate with lots of fake users
+            //for (var i = 1; i < 102; i++)
+            //{
+            //    CreateUser(authRepo, $"employee{i}@email.com", $"Employee {i}", "p@55wOrd", roles: new[] { AppRoles.Employee });
+            //}
+
+            // Removing unused UserName in Admin Users UI 
+            appHost.Plugins.Add(new ServiceStack.Admin.AdminUsersFeature {}
+                // When Display Name already contains both
+                .RemoveFromQueryResults(nameof(AuthUserSession.FirstName), nameof(AuthUserSession.LastName))
+                // When using Email as Username
+                .RemoveFields(nameof(AuthUserSession.UserName)));
         },
         afterConfigure: appHost => {
             appHost.AssertPlugin<AuthFeature>().AuthEvents.Add(new AppUserAuthEvents());
