@@ -1,5 +1,4 @@
 @inherits LayoutComponentBase
-@inject ServiceStackStateProvider AuthState;
 
 <div class="page">
     <div class="sidebar">
@@ -10,21 +9,14 @@
         <div class="top-row px-4">
             <a href="/docs/hosting" class="btn btn-outline-success m-3">$0.40 /mo</a>
 
-        @if (AuthState.IsAuthenticated)
-        {
-            var authUser = AuthState.AuthUser!;
-
-            <span class="me-3">@authUser.DisplayName</span>
-
-            var roles = authUser.Roles;
-            @if (roles.Count > 0)
+            <AuthorizeView>
+                <span class="me-3">@context.User.GetDisplayName()</span>
+            @foreach (var role in context.User.GetRoles())
             {
-                @foreach (var role in roles)
-                {
-                    <small title="Admin" class="px-2 py-sm-1 me-1 bg-success bg-gradient text-white rounded">@role</small>
-                }
+                <small @key=role title="Admin" class="px-2 py-sm-1 me-1 d-inline-flex rounded"
+                       style="background-color:rgb(219 234 254);color: rgb(30 64 175);">@role</small>
             }
-        }
+            </AuthorizeView>
             <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
         </div>
         <div class="content px-4">
@@ -32,7 +24,3 @@
         </div>
     </div>
 </div>
-
-
-@code {
-} 
