@@ -44,7 +44,7 @@ else
     async Task SignInAsAnotherUser()
     {
         await AuthStateProvider.LogoutAsync();
-        NavigationManager.NavigateTo($"/signin?return={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}", true);
+        NavigationManager.NavigateTo(NavigationManager.GetLoginUrl(), true);
     }
 
     ApiResult<AppMetadata> appMetadataResult = new();
