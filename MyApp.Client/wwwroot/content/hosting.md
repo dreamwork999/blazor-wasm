@@ -3,6 +3,8 @@ title: Hosting Costs
 WARN: During development Browser Cache needs to be disabled to refresh .md changes
 ---
 
+# App Hosting Costs
+
 <a href="https://jamstack.org">
     <img src="/img/jamstack-icon.svg" style="width:3.5rem;height:3.5rem;float:left;margin:.5rem 1rem 0 0">
 </a>

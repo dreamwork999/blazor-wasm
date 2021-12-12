@@ -32,7 +32,7 @@
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="/hello" Match="NavLinkMatch.All">
-                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Call Hello
+                <span class="oi oi-transfer" aria-hidden="true"></span> Call Hello
             </NavLink>
         </li>
         <li class="nav-item px-3">
@@ -47,7 +47,7 @@
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="/docs/deploy">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Deployments
+                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Deployments
             </NavLink>
         </li>
         <li class="nav-item px-3">
@@ -55,54 +55,41 @@
                 <span class="oi oi-lock-locked" aria-hidden="true"></span> Admin
             </NavLink>
         </li>
-
-    @if (IsAuthenticated)
-    {
-        <li class="nav-item px-3">
-            <a href="#" class="nav-link" @onclick="LogoutAsync" @onclick:preventDefault><span class="oi oi-account-logout" aria-hidden="true"></span>Logout</a>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="@LoginUrl">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Login
-            </NavLink>
-        </li>
-    }
+        <AuthorizeView>
+            <Authorized>
+            <li class="nav-item px-3">
+                <a href="javascript:void" class="nav-link" @onclick="logout"><span class="oi oi-account-logout" aria-hidden="true"></span>Logout</a>
+            </li>
+            </Authorized>
+            <NotAuthorized>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="@LoginUrl">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                </NavLink>
+            </li>
+            </NotAuthorized>
+        </AuthorizeView>
     </ul>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : "";
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : "";
 
-    private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
+    void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    string? LoginUrl { get; set; }
 
-    protected bool IsAuthenticated { get; set; }
-
-    private string? LoginUrl { get; set; }
-
-
-    protected override Task OnInitializedAsync()
+    protected override Task OnParametersSetAsync()
     {
-        LoginUrl = $"/signin?return={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
+        LoginUrl = NavigationManager.GetLoginUrl();
         return Task.CompletedTask;
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        var state = await authenticationStateTask!;
-        IsAuthenticated = state.User?.Identity?.IsAuthenticated ?? false;
-    }
-
-    private async Task LogoutAsync()
+    async Task logout()
     {
         await AuthStateProvider.LogoutAsync();
         NavigationManager.NavigateTo(LoginUrl ?? "/", true);
     }
-} 
+}
