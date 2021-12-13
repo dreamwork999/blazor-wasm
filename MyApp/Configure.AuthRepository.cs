@@ -9,9 +9,19 @@ using MyApp.Client;
 
 namespace MyApp;
 
+public enum Department
+{
+    None,
+    Marketing,
+    Accounts,
+    Legal,
+    HumanResources,
+}
+
 // Custom User Table with extended Metadata properties
 public class AppUser : UserAuth
 {
+    public Department Department { get; set; }
     public string? ProfileUrl { get; set; }
     public string? LastLoginIp { get; set; }
     public DateTime? LastLoginDate { get; set; }
@@ -55,11 +65,22 @@ public class ConfigureAuthRepository : IHostingStartup
             //}
 
             // Removing unused UserName in Admin Users UI 
-            appHost.Plugins.Add(new ServiceStack.Admin.AdminUsersFeature {}
-                // When Display Name already contains both
-                .RemoveFromQueryResults(nameof(AuthUserSession.FirstName), nameof(AuthUserSession.LastName))
-                // When using Email as Username
-                .RemoveFields(nameof(AuthUserSession.UserName)));
+            appHost.Plugins.Add(new ServiceStack.Admin.AdminUsersFeature {
+                IncludeUserAuthProperties = {
+                    nameof(AppUser.ProfileUrl),
+                },
+                QueryUserAuthProperties = {
+                    nameof(AppUser.LastLoginDate),
+                },
+                GridFieldLayout = {
+                    new() { nameof(AppUser.ProfileUrl) }
+                }
+            }
+            // When Display Name already contains both
+            .RemoveFromQueryResults(
+                nameof(AppUser.FirstName), nameof(AppUser.LastName), nameof(AppUser.ModifiedDate))
+            // When using Email as Username
+            .RemoveFields(nameof(AppUser.UserName)));
         },
         afterConfigure: appHost => {
             appHost.AssertPlugin<AuthFeature>().AuthEvents.Add(new AppUserAuthEvents());
