@@ -1,5 +1,4 @@
 using ServiceStack;
-using ServiceStack.Admin;
 using ServiceStack.Data;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureAutoQuery))]

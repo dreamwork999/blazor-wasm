@@ -11,7 +11,7 @@
 
 <h1 class="fs-2 mb-3">Sign In</h1>
 
-<form @onsubmit="submit" class=@ClassNames("max-w-xl")>
+<form @onsubmit="submit" class="max-w-xl">
 <CascadingValue Value=@apiResult.ErrorStatus>
     <ErrorSummary VisibleFields=@(new[]{ nameof(Authenticate.UserName), nameof(Authenticate.Password) }) />
 
