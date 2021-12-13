@@ -25,7 +25,7 @@ Available themes: Bootstrap, Tailwind
 ```code
 var theme = 'Bootstrap' 
 var fs = vfsFileSystem('.')
-#each name in 'AlertSuccess,DateTimeInput,ErrorField,ErrorSummary,SelectInput,TextAreaInput,TextInput,TypeInput'.split(',')
+#each name in 'AlertSuccess,CheckboxInput,DateTimeInput,DynamicInput,ErrorSummary,SelectInput,TextAreaInput,TextInput'.split(',')
     var url = `https://raw.githubusercontent.com/ServiceStack/ServiceStack/master/src/ServiceStack.Blazor/Components/${theme}/${name}.razor`
     url |> urlContents |> to => contents
     fs.writeFile(`${name}.razor`, contents)

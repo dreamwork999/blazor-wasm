@@ -179,7 +179,6 @@
     {
         reset();
         request.Skip = skip ?? 0;
-        logger.LogInformation("searching...");
         searchResult = await ApiAsync(request);
         if (searchResult.Response != null)
             searchResult.Response.Results = searchResult.Response.Results.Select(santize).ToList();
@@ -223,7 +222,7 @@
 
     Task OnKeyPress(KeyboardEventArgs e)
     {
-        logger.LogInformation($"pressed: {e.Key}");
+        //logger.LogInformation($"pressed: {e.Key}");
         if (e.Key == "Escape")
             reset();
         return Task.CompletedTask;

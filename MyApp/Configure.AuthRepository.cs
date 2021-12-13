@@ -1,6 +1,7 @@
 using ServiceStack;
 using ServiceStack.Web;
 using ServiceStack.Data;
+using ServiceStack.Html;
 using ServiceStack.Auth;
 using ServiceStack.Configuration;
 using MyApp.Client;
@@ -58,7 +59,7 @@ public class ConfigureAuthRepository : IHostingStartup
             CreateUser(authRepo, "manager@email.com", "The Manager", "p@55wOrd", roles: new[] { AppRoles.Employee, AppRoles.Manager });
             CreateUser(authRepo, "employee@email.com", "A Employee", "p@55wOrd", roles: new[] { AppRoles.Employee });
 
-            //Populate with lots of fake users
+            //Populate with lots of demo users
             //for (var i = 1; i < 102; i++)
             //{
             //    CreateUser(authRepo, $"employee{i}@email.com", $"Employee {i}", "p@55wOrd", roles: new[] { AppRoles.Employee });
@@ -66,14 +67,15 @@ public class ConfigureAuthRepository : IHostingStartup
 
             // Removing unused UserName in Admin Users UI 
             appHost.Plugins.Add(new ServiceStack.Admin.AdminUsersFeature {
-                IncludeUserAuthProperties = {
-                    nameof(AppUser.ProfileUrl),
-                },
                 QueryUserAuthProperties = {
+                    nameof(AppUser.Department),
                     nameof(AppUser.LastLoginDate),
                 },
                 GridFieldLayout = {
-                    new() { nameof(AppUser.ProfileUrl) }
+                    new() {
+                        Input.For<AppUser>(x => x.Department),
+                    },
+                    new() { Input.For<AppUser>(x => x.ProfileUrl, c => c.Type = Input.Types.Url) },
                 }
             }
             // When Display Name already contains both
