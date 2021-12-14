@@ -47,22 +47,21 @@
                 <div class="collapse">
                     <ul class="nav flex-column"></ul>
 <script>
-let NavInfo = (label, icon, route) => ({
+const NavInfo = (label, icon, route) => ({
     label, cls: `oi oi-${icon}`, route: route.replace(/\$$/, ''), exact: route.endsWith('$') })
-let N = s => NavInfo.apply(null, s.split(','))
-let NAV = [
-    N('Home,home,/$'),
-    N('Counter,plus,/counter'),
-    N('Todos,clipboard,/todomvc'),
-    N('Bookings CRUD,calendar,/bookings-crud'),
-    N('Call Hello,transfer,/hello$'),
-    N('Call HelloSecure,shield,/hello-secure'),
-    N('Fetch data,list-rich,/fetchdata'),
-    N('Deployments,cloud-upload,/docs/deploy'),
-    N('Admin,lock-locked,/admin'),
-    N('Login,account-login,/signin'),
-]
-let path = location.pathname
+const NAV = [
+    'Home,home,/$',
+    'Counter,plus,/counter',
+    'Todos,clipboard,/todomvc',
+    'Bookings CRUD,calendar,/bookings-crud',
+    'Call Hello,transfer,/hello$',
+    'Call HelloSecure,shield,/hello-secure',
+    'Fetch data,list-rich,/fetchdata',
+    'Deployments,cloud-upload,/docs/deploy',
+    'Admin,lock-locked,/admin',
+    'Login,account-login,/signin',
+].map(s => NavInfo.apply(null, s.split(',')))
+const path = location.pathname
 document.querySelector('#loading .collapse .nav').innerHTML = NAV
     .map(({ label, cls, route, exact }) => `<li class="nav-item px-3${route==NAV[0].route?' pt-3':''}">
             <a href="${route}" class="nav-link${(exact ? path == route : path.startsWith(route)) ? ' active' : ''}">

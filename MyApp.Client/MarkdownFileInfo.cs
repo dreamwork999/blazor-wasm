@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace MyApp.Client;
-public class MarkdownDoc
+public class MarkdownFileInfo
 {
     public string? Path { get; set; }
     public string? FileName { get; set; }
