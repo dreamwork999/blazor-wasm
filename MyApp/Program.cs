@@ -1,5 +1,5 @@
-﻿using MyApp;
-using ServiceStack;
+﻿using ServiceStack;
+using MyApp;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();

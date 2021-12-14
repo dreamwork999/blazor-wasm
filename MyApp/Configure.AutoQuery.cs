@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using ServiceStack;
 using ServiceStack.Data;
 

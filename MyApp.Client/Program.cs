@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Blazored.LocalStorage;
 using Blazor.Extensions.Logging;
 using ServiceStack.Blazor;
 using MyApp.Client;
-
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddLogging(c => c
@@ -16,6 +16,7 @@ builder.Services.AddLogging(c => c
     .SetMinimumLevel(LogLevel.Trace)
 );
 builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 
