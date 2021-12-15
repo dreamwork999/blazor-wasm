@@ -39,4 +39,10 @@
         <Exec Condition="$(DEPLOY_CDN) != ''" Command="echo $(DEPLOY_CDN) &gt; $(MSBuildProjectDirectory)/../MyApp.Client/wwwroot/CNAME" />
     </Target>
 
+    <!-- Run in release.yml to prerender markdown content -->
+    <Target Name="APP_TASKS_ACTION" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
+        <Exec Command=" dotnet run -task prerender:markdown -index ../MyApp.Client/wwwroot/index.html ../MyApp.Client/wwwroot/content ../MyApp.Client/wwwroot/docs"
+              Condition="$(APP_TASKS.Contains('prerender:markdown'))"/>
+    </Target>
+
 </Project>

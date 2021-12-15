@@ -77,7 +77,7 @@ jobs:
       - name: Publish dotnet project
         working-directory: ./MyApp
         run: | 
-          dotnet publish -c Release /p:DEPLOY_API=${{ env.deploy_api }} /p:DEPLOY_CDN=${{ env.deploy_cdn }}
+          dotnet publish -c Release /p:DEPLOY_API=${{ env.deploy_api }} /p:DEPLOY_CDN=${{ env.deploy_cdn }} /p:APP_TASKS=prerender:markdown
 
       # Deploy UI to GitHub Pages
       - name: Deploy to GitHub Pages

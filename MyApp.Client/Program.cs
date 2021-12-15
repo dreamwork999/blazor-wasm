@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
-using Blazored.LocalStorage;
 using Blazor.Extensions.Logging;
 using ServiceStack.Blazor;
 using MyApp.Client;
@@ -19,9 +18,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
-
-builder.Services.AddBlazoredLocalStorage(config =>
-    config.JsonSerializerOptions.WriteIndented = true);
 
 // Use / for local or CDN resources
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
