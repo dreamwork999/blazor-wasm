@@ -57,15 +57,14 @@ public static class TaskRunner
         public static string DefaultIndexPath { get; set; } = "../MyApp.Client/wwwroot/index.html";
 
         public bool Verbose { get; set; }
-        public string Task { get; set; }
-        public string IndexPath { get; set; }
-        public List<string> Args { get; set; }
+        public string? Task { get; set; }
+        public string? IndexPath { get; set; }
+        public List<string> Args { get; set; } = new();
 
         public static ArgsParser Parse(string[] args)
         {
             var to = new ArgsParser
             {
-                Args = new(),
                 IndexPath = DefaultIndexPath,
             };
 
@@ -122,7 +121,7 @@ public static class TaskRunner
             var dstDir = santizePath(cmd.Args[1]);
 
             if (!Directory.Exists(srcDir)) throw new Exception($"{Path.GetFullPath(srcDir)} does not exist");
-            FileSystemVirtualFiles.DeleteDirectoryRecursive(dstDir);
+            if (Directory.Exists(dstDir)) FileSystemVirtualFiles.DeleteDirectoryRecursive(dstDir);
             FileSystemVirtualFiles.AssertDirectory(dstDir);
 
             foreach (var file in new DirectoryInfo(srcDir).GetFiles("*.md", SearchOption.AllDirectories))
@@ -130,8 +129,8 @@ public static class TaskRunner
                 WriteLine($"Converting {file.FullName} ...");
 
                 var name = file.Name.WithoutExtension();
-                var docResult = MyApp.Client.MarkdownUtils.LoadDocumentAsync(name, async doc =>
-                    File.ReadAllText(file.FullName)).GetAwaiter().GetResult();
+                var docResult = MyApp.Client.MarkdownUtils.LoadDocumentAsync(name, doc =>
+                    Task.FromResult(File.ReadAllText(file.FullName))).GetAwaiter().GetResult();
 
                 if (docResult.IsError)
                 {
@@ -159,9 +158,9 @@ public static class TaskRunner
     /// </summary>
     public class IndexTemplate
     {
-        public string Contents { get; set; }
-        public string Header { get; set; }
-        public string Footer { get; set; }
+        public string? Contents { get; set; }
+        public string? Header { get; set; }
+        public string? Footer { get; set; }
 
         static IndexTemplate Instance = new();
         public static string Render(ArgsParser cmd, string body)
@@ -169,7 +168,7 @@ public static class TaskRunner
             if (Instance.Contents == null)
             {
                 if (!File.Exists(cmd.IndexPath))
-                    throw new Exception($"{Path.GetFullPath(cmd.IndexPath)} does not exist");
+                    throw new Exception($"{Path.GetFullPath(cmd.IndexPath!)} does not exist");
 
                 var sb = new StringBuilder();
                 foreach (var line in File.ReadAllLines(cmd.IndexPath))
