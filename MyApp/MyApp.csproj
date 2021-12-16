@@ -58,6 +58,7 @@
     </Target>
     <Target Name="PrerenderPages">
         <Message Text="PrerenderPages..." />
+        
         <PropertyGroup>
             <GettingStartedContents>$([System.IO.File]::ReadAllText('$(ClientDir)/Shared/GettingStarted.razor'))</GettingStartedContents>
             <IndexFileContents>
