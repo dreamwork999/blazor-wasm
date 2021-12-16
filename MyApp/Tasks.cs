@@ -182,6 +182,7 @@ public static class TaskRunner
                         continue;
                     sb.AppendLine(line);
                 }
+                sb.AppendLine("<!--prerendered-->"); // marker to identify it's a prendered page
                 File.WriteAllText(file.FullName, sb.ToString());
             }
 
