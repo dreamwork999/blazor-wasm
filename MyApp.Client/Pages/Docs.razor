@@ -46,11 +46,17 @@ else if (render.Error == null && !isPagePrerendered)
         }
         catch (JSException e)
         {
+            isPagePrerendered = false;
             // ignore, tag function is missing, render at runtime.
         }
 
         if(!isPagePrerendered)
             render = await MarkdownUtils.LoadDocumentAsync(Path!, doc => Http.GetStringAsync($"/content/{doc.FileName}"));
+    }
+
+    protected override bool ShouldRender()
+    {
+        return !isPagePrerendered;
     }
 
     protected override async Task OnParametersSetAsync()
