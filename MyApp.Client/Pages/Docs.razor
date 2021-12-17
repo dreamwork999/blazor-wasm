@@ -31,9 +31,9 @@ else if (render.Error == null && !isPagePrerendered)
 
     ApiResult<MarkdownFileInfo> render { get; set; } = new();
 
-    bool isPagePrerendered { get; set; } = false;
+    bool isPagePrerendered { get; set; } = true;
 
-    string lastPathPath = "";
+    string lastPathPath { get; set; } = "";
 
     async Task loadDoc()
     {
