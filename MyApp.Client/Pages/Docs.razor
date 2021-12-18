@@ -1,7 +1,6 @@
 @page "/docs/{path?}"
 @inherits AppComponentBase
 @inject HttpClient Http
-@inject IJSRuntime JS
 @using Markdig
 @using Markdig.Syntax
 
@@ -18,9 +17,9 @@
         <SrcLink href="https://github.com/NetCoreTemplates/blazor-wasm/blob/master/MyApp.Client/Pages/Docs.razor" IconSrc="/img/blazor.svg" />
     </div>
 }
-else if (render.Error == null && !isPagePrerendered)
+else if (render.Error == null)
 {
-    <div>Loading...</div>
+    <Loading />
 }
 
 <ErrorSummary Status=@render.Error />
@@ -31,42 +30,9 @@ else if (render.Error == null && !isPagePrerendered)
 
     ApiResult<MarkdownFileInfo> render { get; set; } = new();
 
-    bool isPagePrerendered { get; set; } = true;
+    async Task loadDoc() => 
+        render = await MarkdownUtils.LoadDocumentAsync(Path!, doc => Http.GetStringAsync($"/content/{doc.FileName}"));
 
-    string lastPathPath { get; set; } = "";
-
-    async Task loadDoc()
-    {
-        if (lastPathPath != "" && lastPathPath == Path)
-            return;
-        lastPathPath = Path;
-        try
-        {
-            isPagePrerendered = await (JS.InvokeAsync<bool>("isPagePrerendered"));
-        }
-        catch (JSException e)
-        {
-            isPagePrerendered = false;
-            // ignore, tag function is missing, render at runtime.
-        }
-
-        if(!isPagePrerendered)
-            render = await MarkdownUtils.LoadDocumentAsync(Path!, doc => Http.GetStringAsync($"/content/{doc.FileName}"));
-    }
-
-    protected override bool ShouldRender()
-    {
-        return !isPagePrerendered;
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await loadDoc();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await loadDoc();
-    }
-
+    protected override async Task OnParametersSetAsync() => await loadDoc();
+    protected override async Task OnInitializedAsync() => await loadDoc();
 }

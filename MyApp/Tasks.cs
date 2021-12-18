@@ -140,19 +140,19 @@ public static class TaskRunner
                     continue;
                 }
 
+                var dirName = dstDir.IndexOf("wwwroot") >= 0
+                    ? dstDir.LastRightPart("wwwroot").Replace('\\','/')
+                    : new DirectoryInfo(dstDir).Name;
+                var path = dirName.CombineWith(name == "index" ? "" : name);
+
                 var mdBody = @$"
-<div class=""prose lg:prose-xl min-vh-100 m-3"">
+<div class=""prose lg:prose-xl min-vh-100 m-3"" data-prerender=""{path}"">
     <div class=""markdown-body"">
         {docRender.Response!.Preview!}
     </div>
 </div>
 ";
-                var taggedAsPrerendered = @"
-<script>
-window.isPagePrerendered = function () { return true; };
-</script>";
 
-                mdBody += taggedAsPrerendered;
                 var prerenderedPage = IndexTemplate.Render(cmd, mdBody);
                 string htmlPath = Path.GetFullPath(Path.Combine(dstDir, $"{name}.html"));
                 File.WriteAllText(htmlPath, prerenderedPage);
@@ -187,6 +187,7 @@ window.isPagePrerendered = function () { return true; };
                         continue;
                     sb.AppendLine(line);
                 }
+                sb.AppendLine("<!--prerendered-->"); // marker to identify it's a prendered page
                 File.WriteAllText(file.FullName, sb.ToString());
             }
 
