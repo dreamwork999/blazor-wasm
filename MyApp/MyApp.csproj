@@ -34,8 +34,7 @@
             Overwrite="true" Encoding="UTF-8" />
 
         <!-- 404.html SPA fallback (supported by GitHub Pages, Cloudflare & Netlify CDNs) -->
-        <Copy SourceFiles="$(WwwRoot)/index.html" 
-            DestinationFiles="$(WwwRoot)/wwwroot/404.html" />
+        <Copy SourceFiles="$(WwwRoot)/index.html" DestinationFiles="$(WwwRoot)/404.html" />
 
         <!-- define /api proxy routes (supported by Cloudflare or Netlify CDNs)  -->
         <WriteLinesToFile File="$(WwwRoot)/_redirects" 
