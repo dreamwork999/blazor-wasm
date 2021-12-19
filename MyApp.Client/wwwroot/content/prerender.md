@@ -264,7 +264,7 @@ Unfortunately the `@directives` and `@code{}` blocks in `.razor` pages also need
 to do with MSBuild only so we've done this in a custom cleanup task that's generically applied to all pages in the `/prerender` folder:
 
 ```xml
-<Exec Command="dotnet run -task prerender:clean $(ClientDir)/wwwroot/prerender" />
+<Exec Command="dotnet run -task prerender:clean $(WwwRoot)/prerender" />
 ```
 
 Which may initially appear confusing as `dotnet run` is what we use to run the Blazor Server Host and WASM Client. 
@@ -541,6 +541,6 @@ C# version once the Blazor App has loaded.
 
 > Why did this page load so fast?
 
-So to answer the answer the initial question, this page loads so fast because it's prerendered version is being loaded from a CDN,
+So to answer the initial question, this page loads so fast because it's prerendered version is being loaded from a CDN,
 it's the same reason why our modern [nextjs.jamstacks.net](https://nextjs.jamstacks.net) and
 [vue-ssg.jamstacks.net](https://vue-ssg.jamstacks.net) SPA templates have such a great performance and UX.

@@ -118,7 +118,7 @@ client routing:
     <Exec Command="echo DEPLOY_CDN=$(DEPLOY_CDN)" />
 
     <!-- Define custom domain name that CDN should use -->
-    <Exec Condition="$(DEPLOY_CDN) != ''" Command="echo $(DEPLOY_CDN) &gt; $(WwwRoot)/wwwroot/CNAME" />
+    <Exec Condition="$(DEPLOY_CDN) != ''" Command="echo $(DEPLOY_CDN) &gt; $(WwwRoot)/CNAME" />
 </Target>
 ```
 
