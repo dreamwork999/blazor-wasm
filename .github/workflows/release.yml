@@ -77,7 +77,7 @@ jobs:
 
       # Deploy UI to GitHub Pages
       - name: Deploy to GitHub Pages
-        if: ${{ env.deploy_cdn != '' }}
+        if: ${{ secrets.DEPLOY_CDN != '' }}
         run: |
           cd ./MyApp/bin/Release/net6.0/publish/wwwroot
           git init
