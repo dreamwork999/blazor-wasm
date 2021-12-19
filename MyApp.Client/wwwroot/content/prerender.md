@@ -127,14 +127,14 @@ const NAV = ({ label, cls, icon, route, exact }) => `<li class="nav-item${cls}">
         <span class="oi oi-${icon}" aria-hidden="true"></span> ${label}
     </a></li>`
 
-const sidebarInfo = (label, icon, route) => ({ label,
+const sidebarNav = (label, icon, route) => ({ label,
     cls:` px-3${route==SIDEBAR[0].route?' pt-3':''}`,icon,route:route.replace(/\$$/,''), exact:route.endsWith('$')
 })
 const $1 = s => document.querySelector(s)
-$1('#app-loading .sidebar .nav').innerHTML = SIDEBAR.map(s => NAV(sidebarInfo.apply(null, s.split(',')))).join('')
+$1('#app-loading .sidebar .nav').innerHTML = SIDEBAR.map(s => NAV(sidebarNav.apply(null, s.split(',')))).join('')
 
-const topInfo = (label, icon, route) => ({label,cls:'',icon,route:route.replace(/\$$/,''),exact:route.endsWith('$')})
-$1('#app-loading .main-top-row .nav').innerHTML = TOP.map(s => NAV(topInfo.apply(null, s.split(',')))).join('')
+const topNav = (label,icon,route) => ({label,cls:'',icon,route:route.replace(/\$$/,''),exact:route.endsWith('$')})
+$1('#app-loading .main-top-row .nav').innerHTML = TOP.map(s => NAV(topNav.apply(null, s.split(',')))).join('')
 ```
 
 Which takes care of both rendering the top and sidebar menus as well as highlighting the active menu for the active
@@ -165,13 +165,16 @@ any page is to check if any prerendered content exists in the
 folder for the current path, then replace the index.html Loading... page with if it does:
 
 ```js
-const pagePath = path.endsWith('/') ? path.substring(0, path.length - 2) + '/index.html' : path
+const pagePath = path.endsWith('/') 
+    ? path.substring(0, path.length - 2) + '/index.html' 
+    : path
 fetch(`/prerender${pagePath}`)
     .then(r => r.text())
     .then(html => {
-        if (html.indexOf('<!DOCTYPE html>') >= 0) return // don't show CDN 404.html pages
+        if (html.indexOf('<!DOCTYPE html>') >= 0) return // ignore CDN 404.html
         const pageBody = $1('#app-loading .content')
-        if (pageBody) pageBody.innerHTML = `<i hidden data-prerender="${path}"></i>` + html
+        if (pageBody) 
+            pageBody.innerHTML = `<i hidden data-prerender="${path}"></i>` + html
     })
     .catch(/* no prerendered content found for this path */)
 ```
@@ -227,17 +230,17 @@ We can get most of the way there by replacing the `<GettingStarted />` text with
 
 ```xml
 <PropertyGroup>
-    <ClientDir>$(MSBuildProjectDirectory)/../MyApp.Client</ClientDir>
-    <WwwRoot>$(ClientDir)/wwwroot</WwwRoot>
+  <ClientDir>$(MSBuildProjectDirectory)/../MyApp.Client</ClientDir>
+  <WwwRoot>$(ClientDir)/wwwroot</WwwRoot>
 </PropertyGroup>
 <Target Name="PrerenderPages">
-    <PropertyGroup>
-        <GettingStartedContents>$([System.IO.File]::ReadAllText('$(ClientDir)/Shared/GettingStarted.razor'))</GettingStartedContents>
-        <IndexFileContents>
-            $([System.IO.File]::ReadAllText('$(ClientDir)/Pages/Index.razor').Replace('<GettingStarted />',$(GettingStartedContents)))
-        </IndexFileContents>
-    </PropertyGroup>
-    <WriteLinesToFile File="$(WwwRoot)/prerender/index.html" Lines="$(IndexFileContents)" Overwrite="true" />
+  <PropertyGroup>
+    <GettingStartedContents>$([System.IO.File]::ReadAllText('$(ClientDir)/Shared/GettingStarted.razor'))</GettingStartedContents>
+    <IndexFileContents>
+      $([System.IO.File]::ReadAllText('$(ClientDir)/Pages/Index.razor').Replace('<GettingStarted />',$(GettingStartedContents)))
+    </IndexFileContents>
+  </PropertyGroup>
+  <WriteLinesToFile File="$(WwwRoot)/prerender/index.html" Lines="$(IndexFileContents)" Overwrite="true" />
 </Target>
 ```
 
@@ -258,7 +261,7 @@ Enabled by an `AfterTargets="Build"` Task:
 
 ```xml
 <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
-    <CallTarget Targets="PrerenderPages" Condition="$(APP_TASKS.Contains('prerender'))" />
+  <CallTarget Targets="PrerenderPages" Condition="$(APP_TASKS.Contains('prerender'))" />
 </Target>
 ```
 
@@ -290,7 +293,7 @@ public static class TaskRunner
     };
     
     /// <summary>
-    /// Simple cleanup of concatenated Blazor pages by removing @attributes and @code{} blocks
+    /// Simple cleanup of Blazor pages by removing @attributes and @code{} blocks
     /// </summary>
     public class PrerenderClean : ITask
     {
@@ -303,7 +306,8 @@ public static class TaskRunner
 
             var prerenderDir = cmd.Args[0];
 
-            foreach (var file in new DirectoryInfo(prerenderDir).GetFiles("*.html", SearchOption.AllDirectories))
+            foreach (var file in new DirectoryInfo(prerenderDir)
+                .GetFiles("*.html", SearchOption.AllDirectories))
             {
                 var sb = new StringBuilder();
                 foreach (var line in File.ReadAllLines(file.FullName))
@@ -314,7 +318,7 @@ public static class TaskRunner
                         continue;
                     sb.AppendLine(line);
                 }
-                sb.AppendLine("<!--prerendered-->"); // marker to identify it's a prendered page
+                sb.AppendLine("<!--prerendered-->"); //mark prerendered pages
                 File.WriteAllText(file.FullName, sb.ToString());
             }
         }
@@ -343,7 +347,7 @@ to instead load the prerendered page content if it's **for the current path**:
 }
 else
 {
-    <div class=@CssUtils.ClassNames("spinner-border float-start mt-2 me-2", @class) role="status">
+    <div class=@CssUtils.ClassNames("spinner-border float-start mt-2 me-2", @class)>
         <span class="sr-only"></span>
     </div>
     <h1 style="font-size:36px">
@@ -364,8 +368,7 @@ else
     {
         var html = await JsRuntime.InvokeAsync<string>("prerenderedPage") ?? "";
         var currentPath = new Uri(NavigationManager.Uri).AbsolutePath;
-        var prerenderedContentIsForPath = html.IndexOf($"data-prerender=\"{currentPath}\"") >= 0;
-        if (prerenderedContentIsForPath)
+        if (html.IndexOf($"data-prerender=\"{currentPath}\"") >= 0)
         {
             prerenderedHtml = html;
         }
@@ -378,10 +381,10 @@ the alternate layout with an `Authenticating...` text that will appear under the
 
 ```xml
 <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-    <Authorizing>
-        <p class="text-muted" style="float:right;margin:1rem 1rem 0 0">Authenticating...</p>
-        <RouteView RouteData="@routeData" />
-    </Authorizing>
+  <Authorizing>
+    <p class="text-muted" style="float:right;margin:1rem 1rem 0 0">Authenticating...</p>
+    <RouteView RouteData="@routeData" />
+  </Authorizing>
 </AuthorizeRouteView>
 ```
 
@@ -430,11 +433,14 @@ public static class TaskRunner
             var srcDir = santizePath(cmd.Args[0]);
             var dstDir = santizePath(cmd.Args[1]);
     
-            if (!Directory.Exists(srcDir)) throw new Exception($"{Path.GetFullPath(srcDir)} does not exist");
-            if (Directory.Exists(dstDir)) FileSystemVirtualFiles.DeleteDirectoryRecursive(dstDir);
+            if (!Directory.Exists(srcDir)) 
+                throw new Exception($"{Path.GetFullPath(srcDir)} does not exist");
+            if (Directory.Exists(dstDir)) 
+                FileSystemVirtualFiles.DeleteDirectoryRecursive(dstDir);
             FileSystemVirtualFiles.AssertDirectory(dstDir);
     
-            foreach (var file in new DirectoryInfo(srcDir).GetFiles("*.md", SearchOption.AllDirectories))
+            foreach (var file in new DirectoryInfo(srcDir)
+                .GetFiles("*.md", SearchOption.AllDirectories))
             {
                 WriteLine($"Converting {file.FullName} ...");
     
@@ -478,10 +484,10 @@ all pre-generated pages to the
 
 ```xml
 <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
-    <CallTarget Targets="PrerenderMarkdown" Condition="$(APP_TASKS.Contains('prerender'))" />
+  <CallTarget Targets="PrerenderMarkdown" Condition="$(APP_TASKS.Contains('prerender'))" />
 </Target>
 <Target Name="PrerenderMarkdown">
-    <Exec Command="dotnet run -task prerender:markdown -index $(WwwRoot)/index.html $(WwwRoot)/content $(WwwRoot)/docs" />
+  <Exec Command="dotnet run -task prerender:markdown -index $(WwwRoot)/index.html $(WwwRoot)/content $(WwwRoot)/docs" />
 </Target>
 ```
 
