@@ -75,9 +75,13 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.image_repository_name }}:${{ env.TAG_NAME }}
 
+      - name: Create env.deploy_cdn
+        run: |
+          echo "deploy_cdn=${{ secrets.DEPLOY_CDN }}" >> $GITHUB_ENV
+
       # Deploy UI to GitHub Pages
       - name: Deploy to GitHub Pages
-        if: ${{ secrets.DEPLOY_CDN != '' }}
+        if: ${{ env.deploy_cdn != '' }}
         run: |
           cd ./MyApp/bin/Release/net6.0/publish/wwwroot
           git init
@@ -87,6 +91,7 @@ jobs:
           git commit -m 'deploy'
 
       - name: Force push to gh-pages
+        if: ${{ env.deploy_cdn != '' }}
         uses: ad-m/github-push-action@v0.5.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
