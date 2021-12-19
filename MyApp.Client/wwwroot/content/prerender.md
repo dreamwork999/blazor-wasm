@@ -6,9 +6,9 @@ title: Improving UX with Prerendering
 
 ### Blazor WASM trade-offs
 
-Blazor WASM's enables reuse of C# skills, tooling & libraries offering a compelling advantage for .NET teams, so much so
+Blazor WASM enables reuse of C# skills, tooling & libraries offers a compelling advantage for .NET teams, so much so
 it's become our recommended technology for developing internal LOB applications as it's better able to reuse existing
-C# investments in an integrated SPA Framework utilizing a single tooling ecosystem.
+C# investments in an integrated SPA Framework utilizing a single tool chain.
 
 However it does comes at a cost of a larger initial download size and performance cost resulting in a high Time-To-First-Render (TTFR)
 and an overall poor initial User Experience when served over the Internet, that's further exacerbated over low speed Mobile connections.
@@ -132,7 +132,7 @@ const sidebarInfo = (label, icon, route) => ({ label,
 const $1 = s => document.querySelector(s)
 $1('#app-loading .sidebar .nav').innerHTML = SIDEBAR.map(s => NAV(sidebarInfo.apply(null, s.split(',')))).join('')
 
-const topInfo = (label, icon, route) => ({label,cls:'',icon,route:route.replace(/\$$/,''), exact:route.endsWith('$')})
+const topInfo = (label, icon, route) => ({label,cls:'',icon,route:route.replace(/\$$/,''),exact:route.endsWith('$')})
 $1('#app-loading .main-top-row .nav').innerHTML = TOP.map(s => NAV(topInfo.apply(null, s.split(',')))).join('')
 ```
 
@@ -210,7 +210,7 @@ a dependency-free solution by using the tool or .NET projects have: MSBuild.
 
 The [/Pages/Index.razor](https://github.com/NetCoreTemplates/blazor-wasm/blob/main/MyApp.Client/Pages/Index.razor) is pretty simple:
 
-```html
+```razor
 @page "/"
 
 <h1>Hello, world!</h1>
@@ -227,22 +227,23 @@ Where we can get most of the way there by replacing the `<GettingStarted />` tex
 ```xml
 <PropertyGroup>
     <ClientDir>$(MSBuildProjectDirectory)/../MyApp.Client</ClientDir>
+    <WwwRoot>$(ClientDir)/wwwroot</WwwRoot>
 </PropertyGroup>
 <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
     <CallTarget Targets="PrerenderPages" Condition="$(APP_TASKS.Contains('prerender'))" />
 </Target>
 <Target Name="PrerenderPages">
     <Message Text="PrerenderPages..." />
-    
+        
     <PropertyGroup>
         <GettingStartedContents>$([System.IO.File]::ReadAllText('$(ClientDir)/Shared/GettingStarted.razor'))</GettingStartedContents>
         <IndexFileContents>
             $([System.IO.File]::ReadAllText('$(ClientDir)/Pages/Index.razor').Replace('<GettingStarted />',$(GettingStartedContents)))
         </IndexFileContents>
     </PropertyGroup>
-    <WriteLinesToFile File="$(ClientDir)/wwwroot/prerender/index.html" Lines="$(IndexFileContents)" Overwrite="true" />
+    <WriteLinesToFile File="$(WwwRoot)/prerender/index.html" Lines="$(IndexFileContents)" Overwrite="true" />
 
-    <Exec Command="dotnet run -task prerender:clean $(ClientDir)/wwwroot/prerender" />
+    <Exec Command="dotnet run -task prerender:clean $(WwwRoot)/prerender" />
 </Target>
 ```
 
@@ -330,7 +331,7 @@ and another during Authorization. To stop the unwanted yanking we've updated the
 [<Loading/>](https://github.com/NetCoreTemplates/blazor-wasm/blob/main/MyApp.Client/Shared/Loading.razor) component
 to instead load the prerendered page content if it's for the current path:
 
-```html
+```razor
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
 
@@ -524,15 +525,11 @@ all pre-generated pages to the
 [/wwwroot/docs/*.html](https://github.com/NetCoreTemplates/blazor-wasm/tree/gh-pages/docs) folder: 
 
 ```xml
-<PropertyGroup>
-    <ClientDir>$(MSBuildProjectDirectory)/../MyApp.Client</ClientDir>
-</PropertyGroup>
 <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
     <CallTarget Targets="PrerenderMarkdown" Condition="$(APP_TASKS.Contains('prerender'))" />
 </Target>
 <Target Name="PrerenderMarkdown">
-    <Message Text="PrerenderMarkdown..." />
-    <Exec Command="dotnet run -task prerender:markdown -index $(ClientDir)/wwwroot/index.html $(ClientDir)/wwwroot/content $(ClientDir)/wwwroot/docs" />
+    <Exec Command="dotnet run -task prerender:markdown -index $(WwwRoot)/index.html $(WwwRoot)/content $(WwwRoot)/docs" />
 </Target>
 ```
 

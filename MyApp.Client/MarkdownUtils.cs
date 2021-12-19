@@ -1,6 +1,5 @@
 ﻿using Markdig;
 using Markdig.Syntax;
-using Pek.Markdig.HighlightJs;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -34,7 +33,6 @@ public static class MarkdownUtils
             var pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
                 .UseAdvancedExtensions()
-                .UseHighlightJs()
                 .Build();
             var writer = new System.IO.StringWriter();
             var renderer = new Markdig.Renderers.HtmlRenderer(writer);
