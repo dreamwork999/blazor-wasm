@@ -51,11 +51,6 @@
 
     <!-- Run in release.yml to prerender markdown content -->
     <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
-        <Exec Command=" dotnet run -task prerender:markdown -index $(WwwRoot)/index.html $(WwwRoot)/content $(WwwRoot)/docs"
-              Condition="$(APP_TASKS.Contains('prerender:markdown'))"/>
-    </Target>
-
-    <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
         <CallTarget Targets="Prerender" Condition="$(APP_TASKS.Contains('prerender'))" />
     </Target>
 
