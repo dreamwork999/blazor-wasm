@@ -108,37 +108,40 @@ between `<div id="app"></div>` is displayed whilst our Blazor App is loading, be
 Here we just paste in the **MainLayout** markup minus the dynamic navigation menus which we'll generate with a bit of JS below:
 
 ```js
-const SIDEBAR = [
-    'Home,home,/$',
-    'Counter,plus,/counter',
-    'Todos,clipboard,/todomvc',
-    'Bookings CRUD,calendar,/bookings-crud',
-    'Call Hello,transfer,/hello$',
-    'Call HelloSecure,shield,/hello-secure',
-    'Fetch data,list-rich,/fetchdata',
-    'Admin,lock-locked,/admin',
-    'Login,account-login,/signin',
-]
-const TOP = [
-    '0.40 /mo,dollar,/docs/hosting',
-    'Prerendering,loop-circular,/docs/prerender',
-    'Deployments,cloud-upload,/docs/deploy',
-]
+const SIDEBAR = `
+    Home,home,/$
+    Counter,plus,/counter
+    Todos,clipboard,/todomvc
+    Bookings CRUD,calendar,/bookings-crud
+    Call Hello,transfer,/hello$
+    Call HelloSecure,shield,/hello-secure
+    Fetch data,list-rich,/fetchdata
+    Admin,lock-locked,/admin
+    Login,account-login,/signin
+`
+const TOP = `
+    0.40 /mo,dollar,/docs/hosting
+    Prerendering,loop-circular,/docs/prerender
+    Deployments,cloud-upload,/docs/deploy
+`
 
 const path = location.pathname
 const NAV = ({ label, cls, icon, route, exact }) => `<li class="nav-item${cls}">
-    <a href="${route}" class="nav-link${(exact ? path == route : path.startsWith(route)) ? ' active' : ''}">
+    <a href="${route}" class="nav-link${(exact ? path==route : path.startsWith(route)) ? ' active' : ''}">
         <span class="oi oi-${icon}" aria-hidden="true"></span> ${label}
     </a></li>`
-
-const sidebarNav = (label, icon, route) => ({ label,
-    cls:` px-3${route==SIDEBAR[0].route?' pt-3':''}`,icon,route:route.replace(/\$$/,''), exact:route.endsWith('$')
-})
+const renderNav = (csv,f) => csv.trim().split(/\r?\n/g).map(s => NAV(f.apply(null,s.split(',')))).join('')
 const $1 = s => document.querySelector(s)
-$1('#app-loading .sidebar .nav').innerHTML = SIDEBAR.map(s => NAV(sidebarNav.apply(null, s.split(',')))).join('')
 
-const topNav = (label,icon,route) => ({label,cls:'',icon,route:route.replace(/\$$/,''),exact:route.endsWith('$')})
-$1('#app-loading .main-top-row .nav').innerHTML = TOP.map(s => NAV(topNav.apply(null, s.split(',')))).join('')
+$1('#app-loading .sidebar .nav').innerHTML = renderNav(SIDEBAR, (label, icon, route) => ({
+    label, cls: ` px-3${route == SIDEBAR[0].route ? ' pt-3' : ''}`,
+    icon, route: route.replace(/\$$/, ''), exact: route.endsWith('$')
+}))
+
+$1('#app-loading .main-top-row .nav').innerHTML = renderNav(TOP, (label, icon, route) => ({
+    label, cls: '',
+    icon, route: route.replace(/\$$/, ''), exact: route.endsWith('$')
+}))
 ```
 
 Which takes care of both rendering the top and sidebar menus as well as highlighting the active menu for the active
@@ -164,8 +167,8 @@ If you click refresh the [/counter](/counter) page a few times you'll see the ne
 Our App is now in a pretty shippable state with decent UX of a loading page that looks like it loaded instantly instead
 of the "under construction" Loading... page from the default Blazor WASM project template.
 
-It's not quite a zero maintenance solution but still fairly low maintenance as only the `SIDEBAR` and `TOP` lists
-need updating when adding/removing App nav items.
+It's not quite a zero maintenance solution but still fairly low maintenance as only the `SIDEBAR` and `TOP` csv lists
+need updating when add/removing menu items.
 
 ### Improving UX with Prerendering
 
@@ -295,7 +298,7 @@ public static class TaskRunner
     };
     
     /// <summary>
-    /// Simple cleanup of Blazor pages by removing @attributes and @code{} blocks
+    /// Clean Blazor .html pages by removing @attributes and @code{} blocks
     /// </summary>
     public class PrerenderClean : ITask
     {
@@ -391,7 +394,7 @@ the alternate layout with an `Authenticating...` text that will appear under the
 This last change brings us to the optimal UX we have now with the home page loading instantly whilst our Blazor App
 is loading in the background that'll eventually replace the home page with its identical looking C# version except
 for the **box-shadow under the top navigation** so you can tell when you're looking at the pre-rendered version
-or the C# Blazor version.
+instead of the C# Blazor version.
 
 ### Prerendering Markdown Content
 
@@ -492,7 +495,7 @@ all pre-generated pages to the
 ```
 
 This results in the path to the pre-generated markdown docs i.e. [/docs/prerender](/docs/prerender) having the **exact same path** 
-as its route in the Blazor App, which when exists, is given priority in CDNs over the SPA fallback the Blazor App is loaded with.
+as its route in the Blazor App, which when exists, CDNs give priority to over the SPA fallback the Blazor App is loaded with.
 
 It retains the similar behavior as the home page that initially loads pre-rendered content before it's replaced with the
 C# version once the Blazor App has loaded.
@@ -501,7 +504,7 @@ C# version once the Blazor App has loaded.
 
 So to answer the initial question, this page loads so fast because a prerendered version is initially loaded from a CDN edge cache,
 it's the same reason why our other modern [nextjs.jamstacks.net](https://nextjs.jamstacks.net) and
-[vue-ssg.jamstacks.net](https://vue-ssg.jamstacks.net) Jamstack SSG templates have such great performance and UX.
+[vue-ssg.jamstacks.net](https://vue-ssg.jamstacks.net) Jamstack SSG templates have such great performance and UX out-of-the-box.
 
 We hope this technique serves useful in greatly improving the initial UX of Blazor Apps, a new Blazor App
 with all this integrated can be created on the [Home Page](/)
