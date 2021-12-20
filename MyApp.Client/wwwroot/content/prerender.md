@@ -139,8 +139,7 @@ $1('#app-loading .sidebar .nav').innerHTML = renderNav(SIDEBAR, (label, icon, ro
 }))
 
 $1('#app-loading .main-top-row .nav').innerHTML = renderNav(TOP, (label, icon, route) => ({
-    label, cls: '',
-    icon, route: route.replace(/\$$/, ''), exact: route.endsWith('$')
+    label, cls: '', icon, route: route.replace(/\$$/, ''), exact: route.endsWith('$')
 }))
 ```
 
