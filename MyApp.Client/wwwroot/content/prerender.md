@@ -66,7 +66,9 @@ First thing we need to do is move the scoped styles of our Apps
 App chrome can use it.
 
 Then in our [/wwwroot/index.html](https://github.com/NetCoreTemplates/blazor-wasm/blob/main/MyApp.Client/wwwroot/index.html) anything
-between `<div id="app"></div>` is displayed whilst our Blazor App is loading, before it's replaced with the real App:
+between `<div id="app"></div>` is displayed whilst our Blazor App is loading, before it's replaced with the real App.
+
+So Herehwe just paste in the **MainLayout** markup:
 
 ```html
 <div id="app">
@@ -105,7 +107,7 @@ between `<div id="app"></div>` is displayed whilst our Blazor App is loading, be
 </div>
 ```
 
-Here we just paste in the **MainLayout** markup minus the dynamic navigation menus which we'll generate with a bit of JS below:
+Less our App's navigation menus which we'll dynamically generate with the splash of JS below:
 
 ```js
 const SIDEBAR = `
@@ -175,9 +177,9 @@ We'll now turn our focus to the most important page in our App, the [Home Page](
 when loading the App from the first time.
 
 With the above temp App chrome already in place, a simple generic pre-rendering solution to be able to load any prerendered
-any page is to check if any prerendered content exists in the
+page is to check if any prerendered content exists in the
 [/prerender](https://github.com/NetCoreTemplates/blazor-wasm/tree/gh-pages/prerender)
-folder for the current path, then replace the index.html Loading... page with if it does:
+folder for the current path, then if it does replace the default index.html `Loading...` page with it:
 
 ```js
 const pagePath = path.endsWith('/') 
