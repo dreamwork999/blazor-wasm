@@ -52,7 +52,7 @@ public class ConfigureAuth : IHostingStartup
             //override the default registration validation with your own custom implementation
             appHost.RegisterAs<CustomRegistrationValidator, IValidator<Register>>();
 
-            // SKIA required to resize images in default Linux Docker instance (used by Microsoft OAuth)
-            if (Env.IsLinux) ImageProvider.Instance = new ServiceStack.Skia.SkiaImageProvider();
+            // ImageSharp required to resize images in default Linux Docker instance (used by Microsoft OAuth)
+            if (Env.IsLinux) ImageProvider.Instance = new ServiceStack.ImageSharp.ImageSharpImageProvider();
         });
 }
