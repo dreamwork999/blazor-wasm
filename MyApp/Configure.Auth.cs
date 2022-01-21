@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using ServiceStack;
+using ServiceStack.Text;
 using ServiceStack.Auth;
 using ServiceStack.FluentValidation;
 
@@ -50,5 +51,8 @@ public class ConfigureAuth : IHostingStartup
 
             //override the default registration validation with your own custom implementation
             appHost.RegisterAs<CustomRegistrationValidator, IValidator<Register>>();
+
+            // SKIA required to resize images in default Linux Docker instance (used by Microsoft OAuth)
+            if (Env.IsLinux) ImageProvider.Instance = new ServiceStack.Skia.SkiaImageProvider();
         });
 }
