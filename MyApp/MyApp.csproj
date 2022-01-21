@@ -11,7 +11,6 @@
         <PackageReference Include="ServiceStack" Version="5.*" />
         <PackageReference Include="ServiceStack.OrmLite.Sqlite.Data" Version="5.*" />
         <PackageReference Include="ServiceStack.Server" Version="5.*" />
-        <PackageReference Include="ServiceStack.ImageSharp" Version="5.*" />
     </ItemGroup>
 
     <ItemGroup>
