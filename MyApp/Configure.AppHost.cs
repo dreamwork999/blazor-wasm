@@ -8,6 +8,12 @@ namespace MyApp;
 
 public class AppHost : AppHostBase, IHostingStartup
 {
+    public void Configure(IWebHostBuilder builder) => builder
+        .ConfigureServices((context, services) => {
+            // Configure ASP.NET Core IOC Dependencies
+            services.ConfigureNonBreakingSameSiteCookies(context.HostingEnvironment);
+        });
+
     public AppHost() : base("MyApp", typeof(MyServices).Assembly) { }
 
     public override void Configure(Container container)
@@ -22,8 +28,4 @@ public class AppHost : AppHostBase, IHostingStartup
             "https://" + Environment.GetEnvironmentVariable("DEPLOY_CDN")
         }, allowCredentials: true));
     }
-
-    public void Configure(IWebHostBuilder builder) => builder
-        .ConfigureServices((context, services) => 
-            services.ConfigureNonBreakingSameSiteCookies(context.HostingEnvironment));
 }
