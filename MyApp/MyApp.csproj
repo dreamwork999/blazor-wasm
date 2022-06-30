@@ -5,12 +5,16 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
+    <ItemGroup>
+        <Using Include="MyApp" />
+        <Using Include="ServiceStack" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
-        <PackageReference Include="ServiceStack" Version="5.*" />
-        <PackageReference Include="ServiceStack.OrmLite.Sqlite.Data" Version="5.*" />
-        <PackageReference Include="ServiceStack.Server" Version="5.13.3" />
+        <PackageReference Include="ServiceStack" Version="6.*" />
+        <PackageReference Include="ServiceStack.OrmLite.Sqlite.Data" Version="6.*" />
+        <PackageReference Include="ServiceStack.Server" Version="6.*" />
     </ItemGroup>
 
     <ItemGroup>
