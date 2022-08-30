@@ -159,6 +159,7 @@ jobs:
           envs: APPTOKEN,USERNAME
           script: |
             echo $APPTOKEN | docker login ghcr.io -u $USERNAME --password-stdin
+            docker-compose -f ~/.deploy/${{ github.event.repository.name }}-docker-compose.yml pull
             docker-compose -f ~/.deploy/${{ github.event.repository.name }}-docker-compose.yml up ${{ github.event.repository.name }}-migration
 
       # Deploy Docker image with ServiceStack application using `docker compose up` remotely
